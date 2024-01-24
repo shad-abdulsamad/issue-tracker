@@ -31,13 +31,12 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     try {
       setSubmitting(true);
       if (issue) {
-        // If there is an issue, update it using axios.patch
         await axios.patch("/api/issues/" + issue.id, data);
       } else {
-        // If there is no issue, create a new one using axios.post
         await axios.post("/api/issues", data);
       }
       router.push("/issues");
+      router.refresh();
     } catch (error) {
       setSubmitting(false);
       setError("An Unexpected Error Occurred");
