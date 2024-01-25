@@ -29,3 +29,18 @@ export async function PATCH(
 
   return NextResponse.json(updatedIssue);
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const body = await request.json();
+  const validation = validateIssueSchema.safeParse(body);
+
+  if (!validation.success)
+    return NextResponse.json(validation.error.errors, { status: 400 });
+
+  await prisma.issue.delete({
+    where: { id: parseInt(params.id) },
+  });
+}
