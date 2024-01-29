@@ -4,6 +4,7 @@ import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Skeleton from "react-loading-skeleton";
+import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const {
@@ -21,28 +22,35 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   if (isLoading) return <Skeleton />;
 
   return (
-    <Select.Root
-      defaultValue={issue.assignedToUserId || ""}
-      onValueChange={(userId) => {
-        const assignedToUserId = userId === "unassigned" ? null : userId;
-        axios.patch("/api/issues/" + issue.id, {
-          assignedToUserId,
-        });
-      }}
-    >
-      <Select.Trigger placeholder="Assign..." />
-      <Select.Content>
-        <Select.Group>
-          <Select.Label>Users</Select.Label>
-          <Select.Item value="unassigned">Unassigned</Select.Item>
-          {users?.map((user) => (
-            <Select.Item key={user.id} value={user.id}>
-              {user.name}
-            </Select.Item>
-          ))}
-        </Select.Group>
-      </Select.Content>
-    </Select.Root>
+    <>
+      <Select.Root
+        defaultValue={issue.assignedToUserId || ""}
+        onValueChange={async (userId) => {
+          const assignedToUserId = userId === "unassigned" ? null : userId;
+          await axios
+            .patch("/api/issues/" + issue.id, {
+              assignedToUserId,
+            })
+            .catch(() => {
+              toast.error("Changes could not be saved");
+            });
+        }}
+      >
+        <Select.Trigger placeholder="Assign..." />
+        <Select.Content>
+          <Select.Group>
+            <Select.Label>Users</Select.Label>
+            <Select.Item value="unassigned">Unassigned</Select.Item>
+            {users?.map((user) => (
+              <Select.Item key={user.id} value={user.id}>
+                {user.name}
+              </Select.Item>
+            ))}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+      <Toaster />
+    </>
   );
 };
 
