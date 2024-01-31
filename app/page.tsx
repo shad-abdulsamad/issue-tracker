@@ -5,13 +5,5 @@ interface Props {
 }
 
 export default function Home({ searchParams }: Props) {
-  return (
-    <div>
-      <Pagination
-        currentPage={parseInt(searchParams.page)}
-        itemCount={100}
-        pageSize={10}
-      />
-    </div>
-  );
+  return <div>Hello World</div>;
 }
