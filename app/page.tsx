@@ -1,9 +1,9 @@
-import Pagination from "./components/Pagination";
+import LatestIssues from "./LatestIssues";
 
 interface Props {
   searchParams: { page: string };
 }
 
-export default function Home({ searchParams }: Props) {
-  return <div>Hello World</div>;
+export default function Home() {
+  return <LatestIssues />;
 }
